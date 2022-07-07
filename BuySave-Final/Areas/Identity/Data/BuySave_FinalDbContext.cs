@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using BuySave_Final.Models;
 
 namespace BuySave_Final.Areas.Identity.Data;
 
@@ -21,6 +22,16 @@ public class BuySave_FinalDbContext : IdentityDbContext<User>
         // Add your customizations after calling base.OnModelCreating(builder);
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }
+
+    public DbSet<BuySave_Final.Models.Catagory>? Catagory { get; set; }
+
+    public DbSet<BuySave_Final.Models.Country>? Country { get; set; }
+
+    public DbSet<BuySave_Final.Models.BUser>? BUser { get; set; }
+
+    public DbSet<BuySave_Final.Models.Product>? Product { get; set; }
+
+    public DbSet<BuySave_Final.Models.Review>? Review { get; set; }
 }
 
 public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<User>
