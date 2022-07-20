@@ -20,10 +20,20 @@ namespace BuySave_Final.Views.Reviews
         }
 
         // GET: Reviews
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            var buySave_FinalDbContext = _context.Review.Include(r => r.Product);
-            return View(await buySave_FinalDbContext.ToListAsync());
+
+            ViewData["CurrentFilter"] = searchString;
+
+            var products = from s in _context.Review.Include(r => r.Product).Include(r => r.BUser)
+                           select s;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                products = products.Where(s => s.Product.ProductName.Contains(searchString));
+            }
+
+            return View(await products.AsNoTracking().ToListAsync());
         }
 
         // GET: Reviews/Details/5
@@ -35,6 +45,7 @@ namespace BuySave_Final.Views.Reviews
             }
 
             var review = await _context.Review
+                .Include(r => r.BUser)
                 .Include(r => r.Product)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
             if (review == null)
@@ -48,7 +59,8 @@ namespace BuySave_Final.Views.Reviews
         // GET: Reviews/Create
         public IActionResult Create()
         {
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID");
+            ViewData["BUserID"] = new SelectList(_context.BUser, "BUserID", "UserName");
+            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductName");
             return View();
         }
 
@@ -57,14 +69,15 @@ namespace BuySave_Final.Views.Reviews
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReviewID,UserID,ProductID,ReviewText,ItemRating,WebsiteURL,WebsiteRating,Price")] Review review)
+        public async Task<IActionResult> Create([Bind("ReviewID,BUserID,ProductID,ReviewText,ItemRating,WebsiteURL,WebsiteRating,Price")] Review review)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 _context.Add(review);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["BUserID"] = new SelectList(_context.BUser, "BUserID", "BUserID", review.BUserID);
             ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", review.ProductID);
             return View(review);
         }
@@ -82,7 +95,8 @@ namespace BuySave_Final.Views.Reviews
             {
                 return NotFound();
             }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", review.ProductID);
+            ViewData["BUserID"] = new SelectList(_context.BUser, "UserName", "BUserID", review.BUserID);
+            ViewData["ProductID"] = new SelectList(_context.Product, "ProductName", "ProductID", review.ProductID);
             return View(review);
         }
 
@@ -91,14 +105,14 @@ namespace BuySave_Final.Views.Reviews
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ReviewID,UserID,ProductID,ReviewText,ItemRating,WebsiteURL,WebsiteRating,Price")] Review review)
+        public async Task<IActionResult> Edit(int id, [Bind("ReviewID,BUserID,ProductID,ReviewText,ItemRating,WebsiteURL,WebsiteRating,Price")] Review review)
         {
             if (id != review.ReviewID)
             {
                 return NotFound();
             }
 
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 try
                 {
@@ -118,7 +132,8 @@ namespace BuySave_Final.Views.Reviews
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProductID"] = new SelectList(_context.Product, "ProductID", "ProductID", review.ProductID);
+            ViewData["BUserID"] = new SelectList(_context.BUser, "UserName", "BUserID", review.BUserID);
+            ViewData["ProductID"] = new SelectList(_context.Product, "ProductName", "ProductID", review.ProductID);
             return View(review);
         }
 
@@ -131,6 +146,7 @@ namespace BuySave_Final.Views.Reviews
             }
 
             var review = await _context.Review
+                .Include(r => r.BUser)
                 .Include(r => r.Product)
                 .FirstOrDefaultAsync(m => m.ReviewID == id);
             if (review == null)

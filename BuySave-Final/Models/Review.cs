@@ -9,7 +9,7 @@ namespace BuySave_Final.Models
         public int ReviewID { get; set; }
         //Username gets pulled from Users class
         [Display(Name = "Username")]
-        public int UserID { get; set; }
+        public int BUserID { get; set; }
         //Product name gets pulled from Products class
         [Display(Name = "Product Name")]
         public int ProductID { get; set; }
