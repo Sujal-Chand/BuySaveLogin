@@ -48,7 +48,7 @@ namespace BuySave_Final.Views.Products
         // GET: Products/Create
         public IActionResult Create()
         {
-            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryID", "CatagoryID");
+            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryID", "CatagoryName");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace BuySave_Final.Views.Products
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryID", "CatagoryID", product.CatagoryID);
+            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryName", "CatagoryID", product.CatagoryID);
             return View(product);
         }
 
@@ -82,7 +82,7 @@ namespace BuySave_Final.Views.Products
             {
                 return NotFound();
             }
-            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryID", "CatagoryID", product.CatagoryID);
+            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryID", "CatagoryName", product.CatagoryID);
             return View(product);
         }
 
@@ -118,7 +118,7 @@ namespace BuySave_Final.Views.Products
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryID", "CatagoryID", product.CatagoryID);
+            ViewData["CatagoryID"] = new SelectList(_context.Catagory, "CatagoryName", "CatagoryID", product.CatagoryID);
             return View(product);
         }
 

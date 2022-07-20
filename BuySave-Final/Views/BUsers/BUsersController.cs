@@ -48,7 +48,7 @@ namespace BuySave_Final.Views.BUsers
         // GET: BUsers/Create
         public IActionResult Create()
         {
-            ViewData["CountryID"] = new SelectList(_context.Country, "CountryID", "CountryID");
+            ViewData["CountryID"] = new SelectList(_context.Country, "CountryID", "CountryName");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace BuySave_Final.Views.BUsers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryID"] = new SelectList(_context.Country, "CountryID", "CountryID", bUser.CountryID);
+            ViewData["CountryID"] = new SelectList(_context.Country, "CountryName", "CountryID", bUser.CountryID);
             return View(bUser);
         }
 
@@ -82,7 +82,7 @@ namespace BuySave_Final.Views.BUsers
             {
                 return NotFound();
             }
-            ViewData["CountryID"] = new SelectList(_context.Country, "CountryID", "CountryID", bUser.CountryID);
+            ViewData["CountryID"] = new SelectList(_context.Country, "CountryID", "CountryName", bUser.CountryID);
             return View(bUser);
         }
 
@@ -118,7 +118,7 @@ namespace BuySave_Final.Views.BUsers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CountryID"] = new SelectList(_context.Country, "CountryID", "CountryID", bUser.CountryID);
+            ViewData["CountryID"] = new SelectList(_context.Country, "CountryName", "CountryID", bUser.CountryID);
             return View(bUser);
         }
 
